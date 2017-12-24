@@ -1,0 +1,18 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": "airbnb",
+  "rules": {
+    "func-names": "off",
+    "no-console": "off",
+    "no-debugger": "off",
+    "comma-dangle": "off",
+    "no-use-before-define": "off",
+    "prefer-destructuring": "off"
+  },
+  "globals": {
+    "html": true
+  }
+}

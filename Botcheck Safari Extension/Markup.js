@@ -1,8 +1,5 @@
 /* eslint-disable no-unused-vars */
 
-// TODO
-// - DRY modal markup
-
 const markup = {
   actionItem: html`
     <div class="ProfileTweet-action ProfileTweet-action--botcheck js-toggleState">
@@ -26,7 +23,7 @@ const markup = {
   `,
   modalContent: html`
     <div class="modal-header">
-      <h3 class="modal-title" id="botcheck-dialog-header">${'header'}</h3>
+      <h3 class="modal-title" id="botcheck-dialog-header">${"header"}</h3>
     </div>
 
     <button
@@ -40,7 +37,7 @@ const markup = {
       </span>
     </button>
 
-    <div class="modal-body" id="botcheck-dialog-body">${'body'}</div>
+    <div class="modal-body" id="botcheck-dialog-body">${"body"}</div>
     
     <div class="modal-footer" id="botcheck-dialog-footer">
       <div class="botcheck-flex botcheck-flex-grow">
@@ -49,43 +46,43 @@ const markup = {
         <a href="http://twitter.com/theashbhat" target="_blank">Follow us for updates</a>
       </div>
       <div class="botcheck-flex">
-        ${'buttons'}
+        ${"buttons"}
       </div>
     </div>
   `,
   modalButtons: {
     positive: html`
-      <button class="EdgeButton EdgeButton--secondary botcheck-modal-disagree" data-botcheck-screen-name="${'screenName'}" data-botcheck-prediction="true">Disagree</button>
-      <button class="EdgeButton EdgeButton--secondary botcheck-modal-share" data-botcheck-screen-name="${'screenName'}">Share</button>
+      <button class="EdgeButton EdgeButton--secondary botcheck-modal-disagree" data-botcheck-screen-name="${"screenName"}" data-botcheck-prediction="true">Disagree</button>
+      <button class="EdgeButton EdgeButton--secondary botcheck-modal-share" data-botcheck-screen-name="${"screenName"}">Share</button>
       <button class="EdgeButton EdgeButton--primary botcheck-modal-close">Close</button>
     `,
     negative: html`
-      <button class="EdgeButton EdgeButton--secondary botcheck-modal-disagree" data-botcheck-screen-name="${'screenName'}" data-botcheck-prediction="false">Disagree</button>
+      <button class="EdgeButton EdgeButton--secondary botcheck-modal-disagree" data-botcheck-screen-name="${"screenName"}" data-botcheck-prediction="false">Disagree</button>
       <button class="EdgeButton EdgeButton--primary botcheck-modal-close">Close</button>
     `,
     thanks: '<button class="EdgeButton EdgeButton--primary botcheck-modal-close">Close</button>'
   },
   modalHeader: {
-    positive: 'Propaganda Bot like patterns found',
-    negative: 'Propaganda Bot like patterns not found'
+    positive: "Propaganda Bot like patterns found",
+    negative: "Propaganda Bot like patterns not found"
   },
   modalBody: html`
     <div class="botcheck-flex">
       <div class="botcheck-flex-shrink">
-        <img src="${'imgData'}" alt="@${'screenName'} profile image" class="botcheck-profile-image" /> 
+        <img src="${"imgData"}" alt="@${"screenName"} profile image" class="botcheck-profile-image" /> 
       </div>
       <div class="botcheck-flex-grow">
-        ${'message'}
+        ${"message"}
       </div>
     </div>  
   `,
   modalMessage: {
     positive: html`
-        Our model has classified <strong>@${'screenName'}</strong> to exhibit patterns 
+        Our model has classified <strong>@${"screenName"}</strong> to exhibit patterns 
         conducive to a political bot or highly moderated account.
     `,
     negative: html`
-        Our model finds that <strong>@${'screenName'}</strong> does not 
+        Our model finds that <strong>@${"screenName"}</strong> does not 
         exhibit patterns conducive to propaganda bots or moderated behavior 
         conducive to political propaganda accounts.
     `
@@ -96,9 +93,9 @@ const markup = {
 // var templateFn = html`Hello ${"foo"}!`;
 // templateFn({ foo: "World" }); // "Hello World!"
 function html(strings, ...keys) {
-  return function (...values) {
+  return function(...values) {
     if (!values) {
-      return '';
+      return "";
     }
     const dict = values[values.length - 1] || {};
     const result = [strings[0]];
@@ -106,6 +103,6 @@ function html(strings, ...keys) {
       const value = Number.isInteger(key) ? values[key] : dict[key];
       result.push(value, strings[i + 1]);
     });
-    return result.join('');
+    return result.join("");
   };
 }
