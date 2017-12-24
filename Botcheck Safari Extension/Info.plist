@@ -32,15 +32,15 @@
         <array>
             <dict>
                 <key>Script</key>
-                <string>markup.js</string>
+                <string>Markup.js</string>
             </dict>
             <dict>
                 <key>Script</key>
-                <string>funcs.js</string>
+                <string>Funcs.js</string>
             </dict>
             <dict>
                 <key>Script</key>
-                <string>ui.js</string>
+                <string>UI.js</string>
             </dict>
         </array>
         <key>SFSafariStyleSheet</key>

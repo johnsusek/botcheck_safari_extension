@@ -18,9 +18,9 @@
 		52F7241A1FF01FF10096405C /* ToolbarItemIcon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 52F724191FF01FF10096405C /* ToolbarItemIcon.pdf */; };
 		52F7241E1FF01FF10096405C /* Botcheck Safari Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 52F7240C1FF01FF10096405C /* Botcheck Safari Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		52F724261FF024890096405C /* Funcs.js in Resources */ = {isa = PBXBuildFile; fileRef = 52F724221FF024880096405C /* Funcs.js */; };
-		52F724271FF024890096405C /* InjectUI.js in Resources */ = {isa = PBXBuildFile; fileRef = 52F724231FF024880096405C /* InjectUI.js */; };
 		52F724281FF024890096405C /* Markup.js in Resources */ = {isa = PBXBuildFile; fileRef = 52F724241FF024890096405C /* Markup.js */; };
 		52F724291FF024890096405C /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 52F724251FF024890096405C /* Style.css */; };
+		52F7242B1FF025860096405C /* UI.js in Resources */ = {isa = PBXBuildFile; fileRef = 52F7242A1FF025860096405C /* UI.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,9 +64,9 @@
 		52F724191FF01FF10096405C /* ToolbarItemIcon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarItemIcon.pdf; sourceTree = "<group>"; };
 		52F7241B1FF01FF10096405C /* Botcheck_Safari_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Botcheck_Safari_Extension.entitlements; sourceTree = "<group>"; };
 		52F724221FF024880096405C /* Funcs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Funcs.js; sourceTree = "<group>"; };
-		52F724231FF024880096405C /* InjectUI.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = InjectUI.js; sourceTree = "<group>"; };
 		52F724241FF024890096405C /* Markup.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Markup.js; sourceTree = "<group>"; };
 		52F724251FF024890096405C /* Style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		52F7242A1FF025860096405C /* UI.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = UI.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,8 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				52F724221FF024880096405C /* Funcs.js */,
-				52F724231FF024880096405C /* InjectUI.js */,
 				52F724241FF024890096405C /* Markup.js */,
+				52F7242A1FF025860096405C /* UI.js */,
 				52F724251FF024890096405C /* Style.css */,
 				52F7240F1FF01FF10096405C /* SafariExtensionHandler.swift */,
 				52F724111FF01FF10096405C /* SafariExtensionViewController.swift */,
@@ -237,9 +237,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52F7242B1FF025860096405C /* UI.js in Resources */,
 				52F7241A1FF01FF10096405C /* ToolbarItemIcon.pdf in Resources */,
 				52F724281FF024890096405C /* Markup.js in Resources */,
-				52F724271FF024890096405C /* InjectUI.js in Resources */,
 				52F724151FF01FF10096405C /* SafariExtensionViewController.xib in Resources */,
 				52F724261FF024890096405C /* Funcs.js in Resources */,
 				52F724291FF024890096405C /* Style.css in Resources */,
