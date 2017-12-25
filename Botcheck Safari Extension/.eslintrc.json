@@ -10,7 +10,9 @@
     "no-debugger": "off",
     "comma-dangle": "off",
     "no-use-before-define": "off",
-    "prefer-destructuring": "off"
+    "prefer-destructuring": "off",
+    "arrow-parens": "off",
+    "space-before-function-paren": "off"
   },
   "globals": {
     "html": true
