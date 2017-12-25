@@ -15,8 +15,8 @@ const markup = {
     </div>
   `,
   resultModal: html`
-    <div id="botcheck-dialog" class="modal-container botcheck-modal-close" style="z-index: 4200; display: none;">
-      <div class="modal" id="botcheck-dialog-dialog" role="alertdialog" style="left: 33%;">
+    <div id="botcheck-dialog" class="modal-container botcheck-modal-close botcheck-hide">
+      <div class="modal" id="botcheck-dialog-dialog" role="alertdialog">
         <div class="modal-content" role="document"></div>    
       </div>
     </div>

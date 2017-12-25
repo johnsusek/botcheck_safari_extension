@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign, no-undef */
 
 let modalEl;
-const markup = window.markup;
 
 // Don't inject inside iframes
 if (window.self === window.top) {
@@ -107,8 +106,8 @@ function attachEventListeners() {
   modalEl.addEventListener('click', e => {
     if (e.target.classList.contains('botcheck-modal-close')) {
       // Modal close handler
-      // TODO use class instead
-      modalEl.style.display = 'none';
+      modalEl.classList.add('botcheck-hide');
+      modalEl.classList.remove('botcheck-dialog-show');
     } else if (e.target.classList.contains('botcheck-modal-disagree')) {
       // Disagree handler
       const prediction = e.target.dataset.botcheckPrediction === 'true';
@@ -132,25 +131,26 @@ function attachEventListeners() {
 }
 
 function handleCheckResult(screenName, result) {
-  if (result && result.error) {
-    showError(result.error);
-  } else if (result && typeof result.prediction !== 'undefined') {
-    if (result.prediction === true) {
-      modalEl.classList.add('botcheck-prediction-true');
-      modalEl.classList.remove('botcheck-prediction-false');
-      showPositiveResult(screenName, result.profile_image);
+  if (result) {
+    if (result.error) {
+      showError(result.error);
+    } else if (result && typeof result.prediction !== 'undefined') {
+      if (result.prediction === true) {
+        showPositiveResult(screenName, result.profile_image);
+      } else {
+        showNegativeResult(screenName, result.profile_image);
+      }
     } else {
-      modalEl.classList.add('botcheck-prediction-false');
-      modalEl.classList.remove('botcheck-prediction-true');
-      showNegativeResult(screenName, result.profile_image);
+      console.log('[botcheck] Unknown result from api: ', result);
     }
-    modalEl.style.display = 'block';
   } else {
-    console.log('[botcheck] Unknown result from api: ', result);
+    console.log('[botcheck] Result from API is falsey.');
   }
 }
 
 function showPositiveResult(screenName, profileImage) {
+  modalEl.classList.add('botcheck-prediction-true');
+  modalEl.classList.remove('botcheck-prediction-false');
   const message = markup.modalMessage.positive({ screenName });
   profileImage = profileImage.replace('http:', 'https:');
   getBlobData(profileImage).then(imgData => {
@@ -161,10 +161,14 @@ function showPositiveResult(screenName, profileImage) {
         screenName
       })
     });
+    modalEl.classList.remove('botcheck-hide');
+    modalEl.classList.add('botcheck-dialog-show');
   });
 }
 
 function showNegativeResult(screenName, profileImage) {
+  modalEl.classList.add('botcheck-prediction-false');
+  modalEl.classList.remove('botcheck-prediction-true');
   const message = markup.modalMessage.negative({ screenName });
   profileImage = profileImage.replace('http:', 'https:');
   getBlobData(profileImage).then(imgData => {
@@ -173,6 +177,8 @@ function showNegativeResult(screenName, profileImage) {
       body: markup.modalBody({ screenName, imgData, message }),
       buttons: markup.modalButtons.negative({ screenName })
     });
+    modalEl.classList.remove('botcheck-hide');
+    modalEl.classList.add('botcheck-dialog-show');
   });
 }
 
@@ -182,6 +188,8 @@ function showError(body) {
     body,
     buttons: markup.modalButtons.default
   });
+  modalEl.classList.remove('botcheck-hide');
+  modalEl.classList.add('botcheck-dialog-show');
 }
 
 function showThanks() {

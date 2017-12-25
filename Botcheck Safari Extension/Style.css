@@ -1,7 +1,16 @@
 /* Dialog */
 
+#botcheck-dialog {
+  z-index: 4200;
+}
+
+.botcheck-dialog-show {
+  display: block !important;
+}
+
 #botcheck-dialog-dialog {
   width: 600px !important;
+  left: 33%;
 }
 
 #botcheck-dialog-dialog .botcheck-profile-image {
@@ -48,7 +57,7 @@
 }
 
 .botcheck-spinner:before {
-  content: "";
+  content: '';
   box-sizing: border-box;
   position: absolute;
   top: 50%;
@@ -74,7 +83,7 @@
 }
 
 .botcheck-loading .botcheck-spinner-text {
-  padding-left: 14px;
+  padding-left: 15px;
 }
 
 /* Layout */
