@@ -58,8 +58,9 @@
 			<dict>
 				<key>Allowed Domains</key>
 				<array>
-					<string>*.twitter.com</string>
+					<string>twitter.com</string>
 					<string>ashbhat.pythonanywhere.com</string>
+					<string>log.declaredintent.com</string>
 				</array>
 				<key>Level</key>
 				<string>Some</string>
