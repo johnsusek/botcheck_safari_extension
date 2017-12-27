@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		52F723DC1FF01F530096405C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F723DB1FF01F530096405C /* AppDelegate.swift */; };
 		52F723DE1FF01F530096405C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F723DD1FF01F530096405C /* ViewController.swift */; };
-		52F723E01FF01F530096405C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52F723DF1FF01F530096405C /* Assets.xcassets */; };
 		52F723E31FF01F530096405C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52F723E11FF01F530096405C /* Main.storyboard */; };
 		52F7240D1FF01FF10096405C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F723F11FF01FA60096405C /* Cocoa.framework */; };
 		52F724101FF01FF10096405C /* SafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F7240F1FF01FF10096405C /* SafariExtensionHandler.swift */; };
@@ -50,7 +49,6 @@
 		52F723D81FF01F530096405C /* Botcheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Botcheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52F723DB1FF01F530096405C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52F723DD1FF01F530096405C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		52F723DF1FF01F530096405C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		52F723E21FF01F530096405C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		52F723E41FF01F530096405C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52F723E51FF01F530096405C /* Botcheck.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Botcheck.entitlements; sourceTree = "<group>"; };
@@ -110,7 +108,6 @@
 			children = (
 				52F723DB1FF01F530096405C /* AppDelegate.swift */,
 				52F723DD1FF01F530096405C /* ViewController.swift */,
-				52F723DF1FF01F530096405C /* Assets.xcassets */,
 				52F723E11FF01F530096405C /* Main.storyboard */,
 				52F723E41FF01F530096405C /* Info.plist */,
 				52F723E51FF01F530096405C /* Botcheck.entitlements */,
@@ -225,7 +222,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52F723E01FF01F530096405C /* Assets.xcassets in Resources */,
 				52F723E31FF01F530096405C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
