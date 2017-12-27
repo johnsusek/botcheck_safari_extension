@@ -434,6 +434,7 @@
 		52F724201FF01FF10096405C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Botcheck Safari Extension/Botcheck_Safari_Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "Botcheck Safari Extension/Info.plist";
@@ -448,6 +449,7 @@
 		52F724211FF01FF10096405C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Botcheck Safari Extension/Botcheck_Safari_Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "Botcheck Safari Extension/Info.plist";
