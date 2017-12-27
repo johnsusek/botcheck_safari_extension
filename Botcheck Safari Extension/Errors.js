@@ -14,9 +14,10 @@ window.onerror = function(msg, url, line, col, error) {
 
   // Log any unhandled errors - cheaper than newrelic :)
   try {
-    window.postJSON('https://log.declaredintent.com/botcheck-safari/', {
+    window.postJSON('https://log.declaredintent.com/entries/', {
+      namespace: 'com.declaredintent.botcheck-safari',
       message,
-      navigator: navi
+      visitor: navi
     });
   } catch (err) {
     console.log(err);
