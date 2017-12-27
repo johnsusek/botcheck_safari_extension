@@ -22,8 +22,8 @@
 		<dict>
 			<key>End</key>
 			<array>
-				<string>Errors.js</string>
 				<string>Funcs.js</string>
+				<string>Errors.js</string>
 				<string>Markup.js</string>
 				<string>UI.js</string>
 			</array>
