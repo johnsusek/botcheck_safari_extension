@@ -1,4 +1,4 @@
-/* eslint-disable guard-for-in, no-restricted-syntax */
+/* eslint-disable guard-for-in, no-restricted-syntax, no-empty */
 
 window.onerror = function(msg, url, line, col, error) {
   let extra = !col ? '' : `\ncolumn: ${col}`;
@@ -19,9 +19,7 @@ window.onerror = function(msg, url, line, col, error) {
       message,
       visitor: navi
     });
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
 
   return true;
 };
