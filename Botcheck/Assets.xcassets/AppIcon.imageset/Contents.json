@@ -1,8 +1,12 @@
 {
   "images" : [
     {
+      "idiom" : "mac"
+    },
+    {
       "idiom" : "universal",
-      "filename" : "bot.pdf"
+      "filename" : "bot.pdf",
+      "unassigned" : true
     }
   ],
   "info" : {
