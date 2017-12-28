@@ -46,6 +46,8 @@ function postJSON(url, data) {
       reject(new Error(url));
     };
     xhr.send(JSON.stringify(data));
+  }).catch(ex => {
+    console.error('[botcheck] Caught exception in postJSON.', ex, xhr.response);
   });
 }
 

@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign, no-undef */
-
 let modalEl;
 
 // Don't inject inside iframes
@@ -142,7 +140,7 @@ function handleCheckResult(screenName, result) {
         showNegativeResult(screenName, result.profile_image);
       }
     } else {
-      console.log('[botcheck] Unknown result from API', result);
+      console.error('[botcheck] Unknown result from API', result);
       logError({ message: 'Unknown result from API', screenName, result });
     }
   }
@@ -215,13 +213,13 @@ function botcheck(username) {
   if (chromekey) {
     return getApiKey(chromekey).then(key => {
       if (key) {
-        console.log('[botcheck] Setting api key to ', key);
+        console.info('[botcheck] Setting api key to ', key);
         localStorage.botcheck_apikey = key;
         return check(username);
       }
       // Scenario where API key isn't truthy, browser token probably isn't registered,
       // so register token at /chromelogin & show twitter app auth screen again
-      console.log('[botcheck] API key response was', key, 'Re-registering browser token.');
+      console.warn('[botcheck] API key response was', key, 'Re-registering browser token.');
       window.open(
         `https://ashbhat.pythonanywhere.com/chromelogin?token=${chromekey}`,
         'Authorize',
@@ -233,7 +231,7 @@ function botcheck(username) {
 
   // On first run, generate the browser token (aka chrome key)
   if (!localStorage.botcheck_chromekey) {
-    console.log('[botcheck] No chromekey.. generating...');
+    console.info('[botcheck] No chromekey.. generating...');
     localStorage.botcheck_chromekey = generateToken();
   }
 

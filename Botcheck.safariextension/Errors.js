@@ -35,7 +35,7 @@ window.logger = function(payload) {
         uuid
       })
       .then(() => {
-        console.log(`[botcheck] Logged ${uuid}. Please share this identifier if reporting a bug.`);
+        console.log(`[botcheck] Logged ${uuid}. Please include this identifier if reporting a bug.`);
       });
   } catch (err) {}
 };
