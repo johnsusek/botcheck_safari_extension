@@ -21,7 +21,7 @@ function getJSON(url) {
       reject(new Error(url));
     };
     xhr.send();
-  }).catch(logException);
+  }).catch(window.logException);
 }
 
 function postJSON(url, data) {
@@ -31,10 +31,12 @@ function postJSON(url, data) {
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        var json;
+        // Turn blank responses into an empty object
+        var json = xhr.response ? undefined : {};
         try {
           json = JSON.parse(xhr.response);
         } catch (error) {
+          console.error('[botcheck] Caught exception trying to parse JSON.', xhr.response);
           reject(error);
         }
         resolve(json);
@@ -46,8 +48,6 @@ function postJSON(url, data) {
       reject(new Error(url));
     };
     xhr.send(JSON.stringify(data));
-  }).catch(ex => {
-    console.error('[botcheck] Caught exception in postJSON.', ex, xhr.response);
   });
 }
 
@@ -58,7 +58,8 @@ function getBlobData(url) {
     xhr.responseType = 'blob';
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        resolve(window.URL.createObjectURL(xhr.response));
+        reject(new Error(`${xhr.status} ${xhr.statusText}`));
+        // resolve(window.URL.createObjectURL(xhr.response));
       } else {
         reject(new Error(`${xhr.status} ${xhr.statusText}`));
       }
@@ -67,7 +68,7 @@ function getBlobData(url) {
       reject(new Error(url));
     };
     xhr.send();
-  }).catch(logException);
+  }).catch(window.logException);
 }
 
 function getApiKey(chromekey) {
@@ -78,7 +79,7 @@ function getApiKey(chromekey) {
       }
       return Promise.reject(new Error('Error getting API key'));
     })
-    .catch(logException);
+    .catch(window.logException);
 }
 
 function check(screenName) {
@@ -87,7 +88,7 @@ function check(screenName) {
     apikey: localStorage.botcheck_apikey
   })
     .then(res => res)
-    .catch(logException);
+    .catch(window.logException);
 }
 
 function disagree(screenName, prediction) {
@@ -97,7 +98,7 @@ function disagree(screenName, prediction) {
     apikey: localStorage.botcheck_apikey
   })
     .then(res => res)
-    .catch(logException);
+    .catch(window.logException);
 }
 
 // Swiped from chrome version of extension makeid()

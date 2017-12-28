@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-const markup = {
+window.markup = {
   actionItem: html`
     <div class="ProfileTweet-action ProfileTweet-action--botcheck js-toggleState">
       <button

@@ -15,7 +15,7 @@ if (window.self === window.top) {
 
 function injectUI() {
   // Add dialog markup to DOM
-  document.body.insertAdjacentHTML('afterbegin', markup.resultModal());
+  document.body.insertAdjacentHTML('afterbegin', window.markup.resultModal());
   modalEl = document.getElementById('botcheck-dialog');
 
   // Add check button to profiles
@@ -54,8 +54,7 @@ function processTweetEl(tweetEl) {
   }
 
   tweetEl.dataset.botcheckInjected = true;
-
-  tweetEl.querySelector('.ProfileTweet-actionList').insertAdjacentHTML('beforeend', markup.actionItem());
+  tweetEl.querySelector('.ProfileTweet-actionList').insertAdjacentHTML('beforeend', window.markup.actionItem());
 }
 
 function processProfileEl(profileEl) {
@@ -68,7 +67,7 @@ function processProfileEl(profileEl) {
   // Insert button below screen name
   profileEl
     .querySelector('.ProfileHeaderCard-screenname, .ProfileCard-screenname')
-    .insertAdjacentHTML('afterend', markup.actionItem());
+    .insertAdjacentHTML('afterend', window.markup.actionItem());
 }
 
 function attachEventListeners() {
@@ -86,7 +85,7 @@ function attachEventListeners() {
             ev.srcElement.parentElement.classList.remove('botcheck-loading');
             handleCheckResult(screenName, res);
           })
-          .catch(logException);
+          .catch(window.logException);
       } else if (profile) {
         const screenName = profile.querySelector('[data-screen-name]').dataset.screenName;
         if (screenName) {
@@ -96,7 +95,7 @@ function attachEventListeners() {
               ev.srcElement.parentElement.classList.remove('botcheck-loading');
               handleCheckResult(screenName, res);
             })
-            .catch(logException);
+            .catch(window.logException);
         }
       }
     }
@@ -110,7 +109,7 @@ function attachEventListeners() {
     } else if (e.target.classList.contains('botcheck-modal-disagree')) {
       // Disagree handler
       const prediction = e.target.dataset.botcheckPrediction === 'true';
-      disagree(e.target.dataset.botcheckScreenName, prediction).then(showThanks);
+      window.disagree(e.target.dataset.botcheckScreenName, prediction).then(showThanks);
     } else if (e.target.classList.contains('botcheck-modal-share')) {
       // Share handler
       window.open(
@@ -139,9 +138,10 @@ function handleCheckResult(screenName, result) {
       } else {
         showNegativeResult(screenName, result.profile_image);
       }
+      window.logger({ result });
     } else {
       console.error('[botcheck] Unknown result from API', result);
-      logError({ message: 'Unknown result from API', screenName, result });
+      window.logError({ message: 'Unknown result from API', screenName, result });
     }
   }
 }
@@ -149,73 +149,75 @@ function handleCheckResult(screenName, result) {
 function showPositiveResult(screenName, profileImage) {
   modalEl.classList.add('botcheck-prediction-true');
   modalEl.classList.remove('botcheck-prediction-false');
-  const message = markup.modalMessage.positive({ screenName });
+  const message = window.markup.modalMessage.positive({ screenName });
   profileImage = profileImage.replace('http:', 'https:');
-  getBlobData(profileImage)
+  window
+    .getBlobData(profileImage)
     .then(imgData => {
-      modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
-        header: markup.modalHeader.positive,
-        body: markup.modalBody({ screenName, imgData, message }),
-        buttons: markup.modalButtons.positive({
+      modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
+        header: window.markup.modalHeader.positive,
+        body: window.markup.modalBody({ screenName, imgData, message }),
+        buttons: window.markup.modalButtons.positive({
           screenName
         })
       });
       modalEl.classList.remove('botcheck-hide');
       modalEl.classList.add('botcheck-dialog-show');
     })
-    .catch(logException);
+    .catch(window.logException);
 }
 
 function showNegativeResult(screenName, profileImage) {
   modalEl.classList.add('botcheck-prediction-false');
   modalEl.classList.remove('botcheck-prediction-true');
-  const message = markup.modalMessage.negative({ screenName });
+  const message = window.markup.modalMessage.negative({ screenName });
   profileImage = profileImage.replace('http:', 'https:');
-  getBlobData(profileImage)
+  window
+    .getBlobData(profileImage)
     .then(imgData => {
-      modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
-        header: markup.modalHeader.negative,
-        body: markup.modalBody({ screenName, imgData, message }),
-        buttons: markup.modalButtons.negative({ screenName })
+      modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
+        header: window.markup.modalHeader.negative,
+        body: window.markup.modalBody({ screenName, imgData, message }),
+        buttons: window.markup.modalButtons.negative({ screenName })
       });
       modalEl.classList.remove('botcheck-hide');
       modalEl.classList.add('botcheck-dialog-show');
     })
-    .catch(logException);
+    .catch(window.logException);
 }
 
 function showError(body) {
-  modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
+  modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
     header: 'Sorry, something went wrong.',
     body,
-    buttons: markup.modalButtons.default
+    buttons: window.markup.modalButtons.default
   });
   modalEl.classList.remove('botcheck-hide');
   modalEl.classList.add('botcheck-dialog-show');
 }
 
 function showThanks() {
-  modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
+  modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
     header: 'Thanks for the feedback!',
     body: 'Our model currently has ~90% accuracy and does make mistakes. Thank you for your response. :)',
-    buttons: markup.modalButtons.default
+    buttons: window.markup.modalButtons.default
   });
 }
 
 function botcheck(username) {
   // On third and sub-sequent runs, we have an api key
   if (localStorage.botcheck_apikey) {
-    return check(username);
+    return window.check(username);
   }
 
   // On second run, where we have a browser token (aka chrome key), but no API key
   const chromekey = localStorage.botcheck_chromekey;
   if (chromekey) {
-    return getApiKey(chromekey).then(key => {
+    return window.getApiKey(chromekey).then(key => {
       if (key) {
         console.info('[botcheck] Setting api key to ', key);
         localStorage.botcheck_apikey = key;
-        return check(username);
+        return window.check(username);
       }
       // Scenario where API key isn't truthy, browser token probably isn't registered,
       // so register token at /chromelogin & show twitter app auth screen again
@@ -232,7 +234,7 @@ function botcheck(username) {
   // On first run, generate the browser token (aka chrome key)
   if (!localStorage.botcheck_chromekey) {
     console.info('[botcheck] No chromekey.. generating...');
-    localStorage.botcheck_chromekey = generateToken();
+    localStorage.botcheck_chromekey = window.generateToken();
   }
 
   // Since this is first run, register token at /chromelogin & show twitter app auth screen
