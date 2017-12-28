@@ -21,13 +21,14 @@ function getJSON(url) {
       reject(new Error(url));
     };
     xhr.send();
-  });
+  }).catch(logException);
 }
 
 function postJSON(url, data) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-type', 'application/json');
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         var json;
@@ -64,7 +65,37 @@ function getBlobData(url) {
       reject(new Error(url));
     };
     xhr.send();
-  });
+  }).catch(logException);
+}
+
+function getApiKey(chromekey) {
+  return getJSON(`https://ashbhat.pythonanywhere.com/chromekey?token=${chromekey}`)
+    .then(res => {
+      if (res && res.token) {
+        return res.token;
+      }
+      return Promise.reject(new Error('Error getting API key'));
+    })
+    .catch(logException);
+}
+
+function check(screenName) {
+  return postJSON('https://ashbhat.pythonanywhere.com/checkhandle/', {
+    username: screenName,
+    apikey: localStorage.botcheck_apikey
+  })
+    .then(res => res)
+    .catch(logException);
+}
+
+function disagree(screenName, prediction) {
+  return postJSON('https://ashbhat.pythonanywhere.com/disagree', {
+    username: screenName,
+    prediction,
+    apikey: localStorage.botcheck_apikey
+  })
+    .then(res => res)
+    .catch(logException);
 }
 
 // Swiped from chrome version of extension makeid()
@@ -77,28 +108,4 @@ function generateToken() {
   }
 
   return text;
-}
-
-function check(screenName) {
-  return postJSON('https://ashbhat.pythonanywhere.com/checkhandle/', {
-    username: screenName,
-    apikey: localStorage.botcheck_apikey
-  }).then(res => res);
-}
-
-function getApiKey(chromekey) {
-  return getJSON(`https://ashbhat.pythonanywhere.com/chromekey?token=${chromekey}`).then(res => {
-    if (res && res.token) {
-      return res.token;
-    }
-    return Promise.reject(new Error('Error getting API key'));
-  });
-}
-
-function disagree(screenName, prediction) {
-  return postJSON('https://ashbhat.pythonanywhere.com/disagree', {
-    username: screenName,
-    prediction,
-    apikey: localStorage.botcheck_apikey
-  }).then(res => res);
 }

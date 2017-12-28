@@ -67,9 +67,6 @@ function processProfileEl(profileEl) {
 
   profileEl.dataset.botcheckInjected = true;
 
-  // profileEl is either .ProfileHeaderCard or .ProfileCard
-  console.log(profileEl, 'profileEl');
-
   // Insert button below screen name
   profileEl
     .querySelector('.ProfileHeaderCard-screenname, .ProfileCard-screenname')
@@ -86,18 +83,22 @@ function attachEventListeners() {
       if (tweet && tweet.dataset && tweet.dataset.screenName) {
         const screenName = tweet.dataset.screenName;
         ev.srcElement.parentElement.classList.add('botcheck-loading');
-        botcheck(screenName).then(res => {
-          ev.srcElement.parentElement.classList.remove('botcheck-loading');
-          handleCheckResult(screenName, res);
-        });
+        botcheck(screenName)
+          .then(res => {
+            ev.srcElement.parentElement.classList.remove('botcheck-loading');
+            handleCheckResult(screenName, res);
+          })
+          .catch(logException);
       } else if (profile) {
         const screenName = profile.querySelector('[data-screen-name]').dataset.screenName;
         if (screenName) {
           ev.srcElement.parentElement.classList.add('botcheck-loading');
-          botcheck(screenName).then(res => {
-            ev.srcElement.parentElement.classList.remove('botcheck-loading');
-            handleCheckResult(screenName, res);
-          });
+          botcheck(screenName)
+            .then(res => {
+              ev.srcElement.parentElement.classList.remove('botcheck-loading');
+              handleCheckResult(screenName, res);
+            })
+            .catch(logException);
         }
       }
     }
@@ -141,10 +142,9 @@ function handleCheckResult(screenName, result) {
         showNegativeResult(screenName, result.profile_image);
       }
     } else {
-      console.log('[botcheck] Unknown result from api: ', result);
+      console.log('[botcheck] Unknown result from API', result);
+      logError({ message: 'Unknown result from API', screenName, result });
     }
-  } else {
-    console.log('[botcheck] Result from API is falsey.');
   }
 }
 
@@ -153,17 +153,19 @@ function showPositiveResult(screenName, profileImage) {
   modalEl.classList.remove('botcheck-prediction-false');
   const message = markup.modalMessage.positive({ screenName });
   profileImage = profileImage.replace('http:', 'https:');
-  getBlobData(profileImage).then(imgData => {
-    modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
-      header: markup.modalHeader.positive,
-      body: markup.modalBody({ screenName, imgData, message }),
-      buttons: markup.modalButtons.positive({
-        screenName
-      })
-    });
-    modalEl.classList.remove('botcheck-hide');
-    modalEl.classList.add('botcheck-dialog-show');
-  });
+  getBlobData(profileImage)
+    .then(imgData => {
+      modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
+        header: markup.modalHeader.positive,
+        body: markup.modalBody({ screenName, imgData, message }),
+        buttons: markup.modalButtons.positive({
+          screenName
+        })
+      });
+      modalEl.classList.remove('botcheck-hide');
+      modalEl.classList.add('botcheck-dialog-show');
+    })
+    .catch(logException);
 }
 
 function showNegativeResult(screenName, profileImage) {
@@ -171,15 +173,17 @@ function showNegativeResult(screenName, profileImage) {
   modalEl.classList.remove('botcheck-prediction-true');
   const message = markup.modalMessage.negative({ screenName });
   profileImage = profileImage.replace('http:', 'https:');
-  getBlobData(profileImage).then(imgData => {
-    modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
-      header: markup.modalHeader.negative,
-      body: markup.modalBody({ screenName, imgData, message }),
-      buttons: markup.modalButtons.negative({ screenName })
-    });
-    modalEl.classList.remove('botcheck-hide');
-    modalEl.classList.add('botcheck-dialog-show');
-  });
+  getBlobData(profileImage)
+    .then(imgData => {
+      modalEl.querySelector('.modal-content').innerHTML = markup.modalContent({
+        header: markup.modalHeader.negative,
+        body: markup.modalBody({ screenName, imgData, message }),
+        buttons: markup.modalButtons.negative({ screenName })
+      });
+      modalEl.classList.remove('botcheck-hide');
+      modalEl.classList.add('botcheck-dialog-show');
+    })
+    .catch(logException);
 }
 
 function showError(body) {
