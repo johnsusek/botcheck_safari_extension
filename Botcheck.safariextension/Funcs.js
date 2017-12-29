@@ -60,8 +60,7 @@ function getBlobData(url) {
     xhr.responseType = 'blob';
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        reject(new Error(`${xhr.status} ${xhr.statusText}`));
-        // resolve(window.URL.createObjectURL(xhr.response));
+        resolve(window.URL.createObjectURL(xhr.response));
       } else {
         reject(new Error(`${xhr.status} ${xhr.statusText}`));
       }

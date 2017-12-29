@@ -8,15 +8,21 @@ window.onerror = function(msg, url, line, col, error) {
   return true;
 };
 
-window.logException = function(exception) {
+window.logException = function(ex) {
   const uuid = generateUuid();
+  const exception = {
+    message: ex.toString(),
+    stack: ex.stack
+  };
   window.logger({ exception }, uuid);
-  console.info(`[botcheck] Logged exception ${uuid}. Please include this identifier if reporting a bug.`, exception);
+  console.info(
+    `[botcheck] Logged exception ${uuid}. Please include this identifier if reporting a bug. Details: `,
+    exception
+  );
 };
 
 window.logError = function(error) {
   const uuid = generateUuid();
-  console.error(uuid, error);
   window.logger({ error }, uuid);
   console.info(`[botcheck] Logged error ${uuid}. Please include this identifier if reporting a bug.`, error);
 };

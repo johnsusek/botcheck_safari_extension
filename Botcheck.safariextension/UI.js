@@ -138,10 +138,12 @@ function handleCheckResult(screenName, result) {
       } else {
         showNegativeResult(screenName, result.profile_image);
       }
-      window.logger({ result });
+      if (!sessionStorage[`bc_checked_${screenName}`]) {
+        sessionStorage[`bc_checked_${screenName}`] = result;
+        window.logger({ result });
+      }
     } else {
-      console.error('[botcheck] Unknown result from API', result);
-      window.logError({ message: 'Unknown result from API', screenName, result });
+      window.logError({ message: 'Unknown response from botcheck API', screenName, result });
     }
   }
 }
