@@ -1,4 +1,4 @@
-/* eslint-disable guard-for-in, no-restricted-syntax, no-empty, prefer-template */
+/* eslint-disable no-empty, prefer-template */
 
 window.onerror = function(msg, url, line, col, error) {
   let extra = !col ? '' : `\ncolumn: ${col}`;
@@ -9,26 +9,26 @@ window.onerror = function(msg, url, line, col, error) {
 };
 
 window.logException = function(exception) {
-  window.logger({ exception });
+  const uuid = generateUuid();
+  window.logger({ exception }, uuid);
+  console.info(`[botcheck] Logged exception ${uuid}. Please include this identifier if reporting a bug.`, exception);
 };
 
 window.logError = function(error) {
-  window.logger({ error });
+  const uuid = generateUuid();
+  console.error(uuid, error);
+  window.logger({ error }, uuid);
+  console.info(`[botcheck] Logged error ${uuid}. Please include this identifier if reporting a bug.`, error);
 };
 
-window.logger = function(payload) {
+window.logger = function(payload, uuid = generateUuid()) {
   try {
-    const uuid = generateUuid();
-    window
-      .postJSON('https://log.declaredintent.com/entries', {
-        namespace: 'com.declaredintent.botcheck-safari',
-        useragent: navigator.userAgent,
-        payload,
-        uuid
-      })
-      .then(() => {
-        console.log(`[botcheck] Logged ${uuid}. Please include this identifier if reporting a bug.`);
-      });
+    window.postJSON('https://log.declaredintent.com/entries', {
+      namespace: 'com.declaredintent.botcheck-safari',
+      useragent: navigator && navigator.userAgent,
+      payload,
+      uuid
+    });
   } catch (err) {}
 };
 

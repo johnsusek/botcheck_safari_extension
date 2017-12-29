@@ -32,17 +32,19 @@ function postJSON(url, data) {
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         // Turn blank responses into an empty object
-        var json = xhr.response ? undefined : {};
+        if (xhr.response === '') {
+          return resolve({});
+        }
+        let json;
         try {
           json = JSON.parse(xhr.response);
         } catch (error) {
           console.error('[botcheck] Caught exception trying to parse JSON.', xhr.response);
-          reject(error);
+          return reject(error);
         }
-        resolve(json);
-      } else {
-        reject(new Error(`${xhr.status} ${xhr.statusText}`));
+        return resolve(json);
       }
+      return reject(new Error(`${xhr.status} ${xhr.statusText}`));
     };
     xhr.onerror = () => {
       reject(new Error(url));
