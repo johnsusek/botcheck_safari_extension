@@ -23,7 +23,8 @@
 				<key>End</key>
 				<array>
 					<string>Markup.js</string>
-					<string>Funcs.js</string>
+					<string>Network.js</string>
+					<string>Actions.js</string>
 					<string>Errors.js</string>
 					<string>UI.js</string>
 				</array>
