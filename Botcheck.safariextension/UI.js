@@ -1,15 +1,30 @@
+// TODO
+// - move to a start script and inject on DOMContentLoaded
+// - show button on following/followers
+
 let modalEl;
+let initialData = {};
 
 // Don't inject inside iframes
 if (window.self === window.top) {
   if (document.body) {
+    initData();
     injectUI();
     attachEventListeners();
   } else {
     document.addEventListener('DOMContentLoaded', () => {
+      initData();
       injectUI();
       attachEventListeners();
     });
+  }
+}
+
+function initData() {
+  try {
+    initialData = JSON.parse(document.querySelector('#init-data').value);
+  } catch (ex) {
+    window.logException(ex);
   }
 }
 
@@ -64,43 +79,50 @@ function processProfileEl(profileEl) {
 
   profileEl.dataset.botcheckInjected = true;
 
-  // Insert button below screen name
-  profileEl
-    .querySelector('.ProfileHeaderCard-screenname, .ProfileCard-screenname')
-    .insertAdjacentHTML('afterend', window.markup.actionItem());
+  const nameLink = profileEl.querySelector('.ProfileHeaderCard-screenname, .ProfileCard-screenname');
+  if (nameLink) {
+    const screenNameLink = nameLink.querySelector('.ProfileHeaderCard-screennameLink');
+    const screenNameLinkName = screenNameLink && screenNameLink.href.replace(/^http.*\/(\w+)/, '$1');
+
+    // Skip putting button on own profile
+    if (screenNameLinkName && screenNameLinkName === initialData.screenName) {
+      return;
+    }
+
+    // Insert button below screen name
+    profileEl
+      .querySelector('.ProfileHeaderCard-screenname, .ProfileCard-screenname')
+      .insertAdjacentHTML('afterend', window.markup.actionItem());
+  }
 }
 
 function attachEventListeners() {
-  // Add click handler for botcheck button
+  // Botcheck.me button
   document.body.addEventListener('click', ev => {
-    if (ev.srcElement.closest('.ProfileTweet-action--botcheck')) {
-      const tweet = ev.srcElement.closest('.tweet');
-      const profile = ev.srcElement.closest('.ProfileHeaderCard') || ev.srcElement.closest('.ProfileCard');
+    const button = ev.srcElement;
 
-      if (tweet && tweet.dataset && tweet.dataset.screenName) {
-        const screenName = tweet.dataset.screenName;
-        ev.srcElement.parentElement.classList.add('botcheck-loading');
+    if (button.closest('.ProfileTweet-action--botcheck')) {
+      const tweet = button.closest('.tweet');
+      const profile = button.closest('.ProfileHeaderCard') || button.closest('.ProfileCard');
+      const element = tweet || profile;
+      const screenName = getScreenNameFromElement(element);
+
+      if (screenName) {
+        button.parentElement.classList.add('botcheck-loading');
         botcheck(screenName)
           .then(res => {
-            ev.srcElement.parentElement.classList.remove('botcheck-loading');
+            button.parentElement.classList.remove('botcheck-loading');
             handleCheckResult(screenName, res);
           })
-          .catch(window.logException);
-      } else if (profile) {
-        const screenName = profile.querySelector('[data-screen-name]').dataset.screenName;
-        if (screenName) {
-          ev.srcElement.parentElement.classList.add('botcheck-loading');
-          botcheck(screenName)
-            .then(res => {
-              ev.srcElement.parentElement.classList.remove('botcheck-loading');
-              handleCheckResult(screenName, res);
-            })
-            .catch(window.logException);
-        }
+          .catch(() => {
+            button.parentElement.classList.remove('botcheck-loading');
+            showError('Could not connect to botcheck.me API.');
+          });
       }
     }
   });
 
+  // Modal buttons
   modalEl.addEventListener('click', e => {
     if (e.target.classList.contains('botcheck-modal-close')) {
       // Modal close handler
@@ -128,6 +150,26 @@ function attachEventListeners() {
   });
 }
 
+function getScreenNameFromElement(element) {
+  if (!element) {
+    return;
+  }
+
+  if (element.dataset && element.dataset.screenName) {
+    return element.dataset.screenName;
+  } else if (
+    element.querySelector('[data-screen-name]') &&
+    element.querySelector('[data-screen-name]').dataset.screenName
+  ) {
+    return element.querySelector('[data-screen-name]').dataset.screenName;
+  }
+
+  window.logError({
+    message: 'Could not find screen name from element.',
+    details: { element: element.outerHTML || '' }
+  });
+}
+
 function handleCheckResult(screenName, result) {
   if (result) {
     if (result.error) {
@@ -143,6 +185,7 @@ function handleCheckResult(screenName, result) {
         window.logger({ result });
       }
     } else {
+      showError('Unknown response from botcheck.me API.');
       window.logError({ message: 'Unknown response from botcheck API', screenName, result });
     }
   }

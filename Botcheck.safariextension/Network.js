@@ -19,7 +19,9 @@ window.getJSON = function(url) {
       reject(new Error(url));
     };
     xhr.send();
-  }).catch(ex => ex);
+  }).catch(ex => {
+    throw ex;
+  });
 };
 
 window.postJSON = function(url, data) {
@@ -28,8 +30,7 @@ window.postJSON = function(url, data) {
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.onload = () => {
-      // if (xhr.status >= 200 && xhr.status < 300) {
-      if (!xhr.status >= 200 && xhr.status < 300) {
+      if (xhr.status >= 200 && xhr.status < 300) {
         // Turn blank responses into an empty object
         if (xhr.response === '') {
           return resolve({});
@@ -46,10 +47,12 @@ window.postJSON = function(url, data) {
       return reject(new Error(`${xhr.status} ${xhr.statusText}`));
     };
     xhr.onerror = () => {
-      reject(new Error(url));
+      reject(new Error(`Could not connect to ${url}`));
     };
     xhr.send(JSON.stringify(data));
-  }).catch(ex => ex);
+  }).catch(ex => {
+    throw ex;
+  });
 };
 
 window.getBlobData = function(url) {
@@ -68,5 +71,7 @@ window.getBlobData = function(url) {
       reject(new Error(url));
     };
     xhr.send();
-  }).catch(ex => ex);
+  }).catch(ex => {
+    throw ex;
+  });
 };

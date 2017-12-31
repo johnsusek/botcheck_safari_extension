@@ -15,27 +15,26 @@ window.logException = function(ex) {
     stack: ex.stack
   };
   window.logger({ exception }, uuid);
-  console.info(
-    `[botcheck] Logged exception ${uuid}. Please include this identifier if reporting a bug. Details: `,
-    exception
-  );
+  console.info(`[botcheck] Caught exception ${uuid}. Please include this identifier if reporting a bug.`, exception);
 };
 
 window.logError = function(error) {
   const uuid = generateUuid();
   window.logger({ error }, uuid);
-  console.info(`[botcheck] Logged error ${uuid}. Please include this identifier if reporting a bug.`, error);
+  console.info(`[botcheck] Caught error ${uuid}. Please include this identifier if reporting a bug.`, error);
 };
 
 window.logger = function(payload, uuid = generateUuid()) {
-  try {
-    window.postJSON('https://log.declaredintent.com/entries', {
+  window
+    .postJSON('https://log.declaredintent.com/entries', {
       namespace: 'com.declaredintent.botcheck-safari',
       useragent: navigator && navigator.userAgent,
       payload,
       uuid
+    })
+    .catch(() => {
+      console.error('Got error trying to log error, giving up.');
     });
-  } catch (err) {}
 };
 
 // https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript

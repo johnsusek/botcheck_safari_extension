@@ -13,9 +13,9 @@
     "prefer-destructuring": "off",
     "arrow-parens": "off",
     "space-before-function-paren": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "consistent-return": "off"
   },
   "globals": {
-    "html": true
   }
 }
