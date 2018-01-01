@@ -6,18 +6,10 @@ let modalEl;
 let initialData = {};
 
 // Don't inject inside iframes
-if (window.self === window.top) {
-  if (document.body) {
-    initData();
-    injectUI();
-    attachEventListeners();
-  } else {
-    document.addEventListener('DOMContentLoaded', () => {
-      initData();
-      injectUI();
-      attachEventListeners();
-    });
-  }
+if (window.self === window.top && document.body) {
+  initData();
+  injectUI();
+  attachEventListeners();
 }
 
 function initData() {
@@ -26,6 +18,10 @@ function initData() {
   } catch (ex) {
     window.logException(ex);
   }
+
+  window.postExtensionMessage('getApiKey').then(res => {
+    localStorage.botcheck_apikey = res.message;
+  });
 }
 
 function injectUI() {
@@ -107,18 +103,26 @@ function attachEventListeners() {
       const element = tweet || profile;
       const screenName = getScreenNameFromElement(element);
 
-      if (screenName) {
-        button.parentElement.classList.add('botcheck-loading');
-        botcheck(screenName)
-          .then(res => {
-            button.parentElement.classList.remove('botcheck-loading');
-            handleCheckResult(screenName, res);
-          })
-          .catch(() => {
-            button.parentElement.classList.remove('botcheck-loading');
-            showError('Could not connect to botcheck.me API.');
-          });
+      if (!screenName) {
+        return showError('Could not find screen name from element.');
       }
+
+      if (!localStorage.botcheck_apikey) {
+        return showError('Please click the icon in the toolbar and authorize with Twitter.');
+      }
+
+      button.parentElement.classList.add('botcheck-loading');
+
+      window
+        .apiCheckUser(screenName)
+        .then(res => {
+          button.parentElement.classList.remove('botcheck-loading');
+          handleCheckResult(screenName, res);
+        })
+        .catch(() => {
+          button.parentElement.classList.remove('botcheck-loading');
+          showError('Could not connect to botcheck.me API.');
+        });
     }
   });
 
@@ -131,13 +135,13 @@ function attachEventListeners() {
     } else if (e.target.classList.contains('botcheck-modal-disagree')) {
       // Disagree handler
       const prediction = e.target.dataset.botcheckPrediction === 'true';
-      window.disagree(e.target.dataset.botcheckScreenName, prediction).then(showThanks);
+      window.apiDisagree(e.target.dataset.botcheckScreenName, prediction).then(showThanks);
     } else if (e.target.classList.contains('botcheck-modal-share')) {
       // Share handler
       window.open(
         `https://twitter.com/intent/tweet/?text=I+just+found+out+@${
           e.target.dataset.botcheckScreenName
-        }+is+a+propaganda+account+using+the+botcheck+browser+extension%21+You+can+download+it+from+their+site+at+https%3A%2F%2Fbotcheck.me+and+check+for+yourself.`,
+        }+is+likely+a+propaganda+account+using+the+botcheck+browser+extension%21+You+can+download+it+from+their+site+at+https%3A%2F%2Fbotcheck.me+and+check+for+yourself.`,
         '',
         'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0'
       );
@@ -181,11 +185,11 @@ function handleCheckResult(screenName, result) {
         showNegativeResult(screenName, result.profile_image);
       }
       if (!sessionStorage[`bc_checked_${screenName}`]) {
-        sessionStorage[`bc_checked_${screenName}`] = result;
+        sessionStorage[`bc_checked_${screenName}`] = true;
         window.logger({ result });
       }
     } else {
-      showError('Unknown response from botcheck.me API.');
+      showError(`Unknown response from botcheck.me API. ${result}`);
       window.logError({ message: 'Unknown response from botcheck API', screenName, result });
     }
   }
@@ -247,47 +251,4 @@ function showThanks() {
     body: 'Our model currently has ~90% accuracy and does make mistakes. Thank you for your response. :)',
     buttons: window.markup.modalButtons.default
   });
-}
-
-function botcheck(username) {
-  // On third and sub-sequent runs, we have an api key
-  if (localStorage.botcheck_apikey) {
-    return window.check(username);
-  }
-
-  // On second run, where we have a browser token (aka chrome key), but no API key
-  const chromekey = localStorage.botcheck_chromekey;
-  if (chromekey) {
-    return window.getApiKey(chromekey).then(key => {
-      if (key) {
-        console.info('[botcheck] Setting api key to ', key);
-        localStorage.botcheck_apikey = key;
-        return window.check(username);
-      }
-      // Scenario where API key isn't truthy, browser token probably isn't registered,
-      // so register token at /chromelogin & show twitter app auth screen again
-      console.warn('[botcheck] API key response was', key, 'Re-registering browser token.');
-      window.open(
-        `https://ashbhat.pythonanywhere.com/chromelogin?token=${chromekey}`,
-        'Authorize',
-        'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0'
-      );
-      return Promise.resolve({}); // so botcheck.then(...) works in this scenario
-    });
-  }
-
-  // On first run, generate the browser token (aka chrome key)
-  if (!localStorage.botcheck_chromekey) {
-    console.info('[botcheck] No chromekey.. generating...');
-    localStorage.botcheck_chromekey = window.generateToken();
-  }
-
-  // Since this is first run, register token at /chromelogin & show twitter app auth screen
-  window.open(
-    `https://ashbhat.pythonanywhere.com/chromelogin?token=${localStorage.botcheck_chromekey}`,
-    'Authorize',
-    'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0'
-  );
-
-  return Promise.resolve({}); // so botcheck.then(...) works in this scenario
 }

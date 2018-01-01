@@ -17,5 +17,6 @@
     "consistent-return": "off"
   },
   "globals": {
+    "safari": true
   }
 }

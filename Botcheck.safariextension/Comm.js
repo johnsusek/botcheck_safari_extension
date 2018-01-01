@@ -1,3 +1,18 @@
+window.postExtensionMessage = function(messageNameToSend) {
+  safari.self.tab.dispatchMessage(messageNameToSend);
+  return extensionPromise;
+};
+
+const extensionPromise = new Promise(resolve => {
+  safari.self.addEventListener(
+    'message',
+    msg => {
+      resolve(msg);
+    },
+    false
+  );
+});
+
 window.getJSON = function(url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();

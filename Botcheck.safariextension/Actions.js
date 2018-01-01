@@ -1,18 +1,6 @@
 const apiRoot = 'https://ashbhat.pythonanywhere.com';
 
-window.getApiKey = function(chromekey) {
-  return window
-    .getJSON(`${apiRoot}/chromekey?token=${chromekey}`)
-    .then(res => {
-      if (res && res.token) {
-        return res.token;
-      }
-      return Promise.reject(new Error('Error getting API key'));
-    })
-    .catch(window.logException);
-};
-
-window.check = function(screenName) {
+window.apiCheckUser = function(screenName) {
   return window
     .postJSON(`${apiRoot}/checkhandle/`, {
       username: screenName,
@@ -25,7 +13,7 @@ window.check = function(screenName) {
     });
 };
 
-window.disagree = function(screenName, prediction) {
+window.apiDisagree = function(screenName, prediction) {
   return window
     .postJSON(`${apiRoot}/disagree`, {
       username: screenName,
@@ -34,16 +22,4 @@ window.disagree = function(screenName, prediction) {
     })
     .then(res => res)
     .catch(window.logException);
-};
-
-// Swiped from chrome version of extension makeid()
-window.generateToken = function() {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < 15; i += 1) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-
-  return text;
 };

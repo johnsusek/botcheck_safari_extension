@@ -1,0 +1,21 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link href="Popover.css" rel="stylesheet">
+</head>
+
+<body>
+  <div data-if-no-apikey>
+    <p>Welcome to the botcheck.me browser extension. You'll need to authorize with Twitter before you can use the extension.</p>
+    <button data-action-authtwitter>Authorize with Twitter</button>
+  </div>
+  <div data-if-apikey>
+    <div data-if-apiup>✅ API responding.</div>
+    <div data-if-not-apiup>🔴 API not responding.</div>
+    <p>botcheck.me is configured. Click the botcheck.me button when browsing Twitter to see the results.</p>
+  </div>
+  <script src="Popover.js"></script>
+</body>
+
+</html>
