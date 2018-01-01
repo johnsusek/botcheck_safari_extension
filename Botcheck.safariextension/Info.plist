@@ -96,5 +96,7 @@
 		</dict>
 		<key>Website</key>
 		<string>https://botcheck-safari.declaredintent.com</string>
+		<key>Update From Gallery</key>
+		<true/>
 	</dict>
 </plist>
