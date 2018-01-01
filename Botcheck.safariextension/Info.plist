@@ -26,7 +26,7 @@
 					<key>Filename</key>
 					<string>Popover.html</string>
 					<key>Height</key>
-					<integer>78</integer>
+					<integer>105</integer>
 					<key>Identifier</key>
 					<string>Main</string>
 					<key>Width</key>
@@ -75,7 +75,7 @@
 		<key>Description</key>
 		<string>Check for propaganda on Twitter using botcheck.me.</string>
 		<key>DeveloperIdentifier</key>
-		<string>WX2UGCD2SK</string>
+		<string>596EVTX379</string>
 		<key>ExtensionInfoDictionaryVersion</key>
 		<string>1.0</string>
 		<key>Permissions</key>
