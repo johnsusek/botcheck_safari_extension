@@ -19,9 +19,17 @@ function initData() {
     window.logException(ex);
   }
 
-  window.postExtensionMessage('getApiKey').then(res => {
-    localStorage.botcheck_apikey = res.message;
-  });
+  safari.self.addEventListener(
+    'message',
+    msg => {
+      if (msg.name === 'getApiKeyDone') {
+        localStorage.botcheck_apikey = msg.message;
+      }
+    },
+    false
+  );
+
+  safari.self.tab.dispatchMessage('getApiKey');
 }
 
 function injectUI() {
@@ -108,7 +116,10 @@ function attachEventListeners() {
       }
 
       if (!localStorage.botcheck_apikey) {
-        return showError('Please click the icon in the toolbar and authorize with Twitter.');
+        return showInfo(
+          'Please Authorize',
+          'Please click the botcheck icon in the toolbar and authorize with Twitter.'
+        );
       }
 
       button.parentElement.classList.add('botcheck-loading');
@@ -121,7 +132,7 @@ function attachEventListeners() {
         })
         .catch(() => {
           button.parentElement.classList.remove('botcheck-loading');
-          showError('Could not connect to botcheck.me API.');
+          showError('Could not connect to botcheck.me API. Please try again in a few minutes.');
         });
     }
   });
@@ -177,7 +188,11 @@ function getScreenNameFromElement(element) {
 function handleCheckResult(screenName, result) {
   if (result) {
     if (result.error) {
-      showError(result.error);
+      if (result.error === 'wrong api key') {
+        showInfo('Please Authorize', 'Please click the botcheck icon in the toolbar and authorize with Twitter.');
+      } else {
+        showError(result.error);
+      }
     } else if (result && typeof result.prediction !== 'undefined') {
       if (result.prediction === true) {
         showPositiveResult(screenName, result.profile_image);
@@ -208,7 +223,8 @@ function showPositiveResult(screenName, profileImage) {
         body: window.markup.modalBody({ screenName, imgData, message }),
         buttons: window.markup.modalButtons.positive({
           screenName
-        })
+        }),
+        links: window.markup.modalLinks.default()
       });
       modalEl.classList.remove('botcheck-hide');
       modalEl.classList.add('botcheck-dialog-show');
@@ -227,7 +243,8 @@ function showNegativeResult(screenName, profileImage) {
       modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
         header: window.markup.modalHeader.negative,
         body: window.markup.modalBody({ screenName, imgData, message }),
-        buttons: window.markup.modalButtons.negative({ screenName })
+        buttons: window.markup.modalButtons.negative({ screenName }),
+        links: window.markup.modalLinks.default()
       });
       modalEl.classList.remove('botcheck-hide');
       modalEl.classList.add('botcheck-dialog-show');
@@ -237,7 +254,17 @@ function showNegativeResult(screenName, profileImage) {
 
 function showError(body) {
   modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
-    header: 'Sorry, something went wrong.',
+    header: 'Sorry, something went wrong!',
+    body,
+    buttons: window.markup.modalButtons.default
+  });
+  modalEl.classList.remove('botcheck-hide');
+  modalEl.classList.add('botcheck-dialog-show');
+}
+
+function showInfo(header, body) {
+  modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
+    header,
     body,
     buttons: window.markup.modalButtons.default
   });
@@ -249,6 +276,9 @@ function showThanks() {
   modalEl.querySelector('.modal-content').innerHTML = window.markup.modalContent({
     header: 'Thanks for the feedback!',
     body: 'Our model currently has ~90% accuracy and does make mistakes. Thank you for your response. :)',
-    buttons: window.markup.modalButtons.default
+    buttons: window.markup.modalButtons.default,
+    links: window.markup.modalLinks.default()
   });
+  modalEl.classList.remove('botcheck-hide');
+  modalEl.classList.add('botcheck-dialog-show');
 }

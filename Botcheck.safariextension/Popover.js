@@ -25,6 +25,9 @@ function authTwitter() {
   newTab.addEventListener('close', () => {
     getApiKey(localStorage.browserToken).then(key => {
       localStorage.apiKey = key;
+      document.querySelector('[data-if-no-apikey]').style.display = 'none';
+      document.querySelector('[data-if-apikey]').style.display = 'block';
+      safari.application.activeBrowserWindow.activeTab.page.dispatchMessage('getApiKeyDone', localStorage.apiKey);
     });
   });
 

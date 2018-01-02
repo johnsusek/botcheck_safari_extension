@@ -41,15 +41,20 @@ window.markup = {
     
     <div class="modal-footer" id="botcheck-dialog-footer">
       <div class="botcheck-flex botcheck-flex-grow">
-        <a href="https://medium.com/@robhat/identifying-propaganda-bots-on-twitter-5240e7cb81a9" target="_blank">How this works</a> 
-        &nbsp;&bull;&nbsp;
-        <a href="http://twitter.com/theashbhat" target="_blank">Follow us for updates</a>
+        ${'links'}
       </div>
       <div class="botcheck-flex">
         ${'buttons'}
       </div>
     </div>
   `,
+  modalLinks: {
+    default: html`
+      <a href="https://medium.com/@robhat/identifying-propaganda-bots-on-twitter-5240e7cb81a9" target="_blank">How this works</a> 
+      &nbsp;&bull;&nbsp;
+      <a href="http://twitter.com/theashbhat" target="_blank">Follow us for updates</a>
+    `
+  },
   modalButtons: {
     positive: html`
       <button class="EdgeButton EdgeButton--secondary botcheck-modal-disagree" data-botcheck-screen-name="${'screenName'}" data-botcheck-prediction="true">Disagree</button>
