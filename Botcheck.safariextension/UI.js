@@ -152,7 +152,7 @@ function attachEventListeners() {
       window.open(
         `https://twitter.com/intent/tweet/?text=I+just+found+out+@${
           e.target.dataset.botcheckScreenName
-        }+is+likely+a+propaganda+account+using+the+botcheck+browser+extension%21+You+can+download+it+from+their+site+at+https%3A%2F%2Fbotcheck.me+and+check+for+yourself.`,
+        }+is+likely+a+propaganda+account%2C+by+using+the+botcheck+browser+extension%21+You+can+download+it+from+their+site+at+https%3A%2F%2Fbotcheck.me+and+check+for+yourself.`,
         '',
         'width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0'
       );
