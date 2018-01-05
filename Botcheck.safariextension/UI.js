@@ -13,6 +13,10 @@ if (window.self === window.top && document.body) {
 }
 
 function initData() {
+  if (!document.querySelector('#init-data')) {
+    return;
+  }
+
   try {
     initialData = JSON.parse(document.querySelector('#init-data').value);
   } catch (ex) {
