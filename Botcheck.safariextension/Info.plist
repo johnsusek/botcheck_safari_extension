@@ -73,7 +73,7 @@
 		</array>
 	</dict>
 	<key>Description</key>
-	<string>Check for propaganda on Twitter using botcheck.me.</string>
+	<string>Check for propaganda on Twitter using machine learning from botcheck.me.</string>
 	<key>DeveloperIdentifier</key>
 	<string>596EVTX379</string>
 	<key>ExtensionInfoDictionaryVersion</key>
